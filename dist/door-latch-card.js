@@ -511,7 +511,7 @@
   const MOD_ORDER = ['door', 'battery', 'events'];
   const DEFAULTS = {
     entity: '', state_sensor: '', commands: true, require_code: false, show_eyebrow: true, eyebrow: 'Door Latch Card',
-    show_title: true, title: '', width: 'center', theme_mode: 'auto', language: 'auto'
+    show_title: true, title: '', width: 'full', theme_mode: 'auto', language: 'auto'
   };
   const BAT_LOW = 30, BAT_CRIT = 15, PEND_MS = 25000, CMD_STATES = { locked: 1, unlocked: 1, locking: 1, unlocking: 1, jammed: 1 };
 
@@ -532,7 +532,7 @@
     o.show_title = r.show_title !== false;
     o.eyebrow = typeof r.eyebrow === 'string' ? r.eyebrow : DEFAULTS.eyebrow;
     o.title = typeof r.title === 'string' ? r.title : '';
-    o.width = r.width === 'full' ? 'full' : 'center';
+    o.width = r.width === 'center' ? 'center' : 'full';
     o.theme_mode = r.theme_mode === 'light' || r.theme_mode === 'dark' ? r.theme_mode : 'auto';
     o.language = LANGS.some((l) => l[0] === r.language) ? r.language : 'auto';
     const ord = Array.isArray(r.order) ? r.order.filter((k, i, a) => MOD_ORDER.indexOf(k) >= 0 && a.indexOf(k) === i) : [];

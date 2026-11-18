@@ -82,7 +82,7 @@ Open a dashboard in edit mode, add **Door Latch Card**, and configure the availa
 
 - **Lock:** The lock entity, an optional sensor for the lock state, whether the commands are enabled and whether unlocking asks for a code.
 - **Modules:** The door sensor, the battery and the events of today. For each module, whether it is active, its entity (where it needs one) and its position. For the battery you can set the low and critical thresholds.
-- **Appearance:** Header, title, theme, language and a switch for the full available width on tablets and desktop (off by default: narrow and centred).
+- **Appearance:** Header, title, theme, language and a switch for the full available width on tablets and desktop (on by default; switch it off for a narrow, centred card).
 
 The editor uses native Home Assistant entity selectors, filtered by domain and device class.
 
