@@ -20,11 +20,16 @@ The card works with any lock integration that provides a `lock` entity, and it d
 </p>
 
 <p align="center">
+  <img src="assets/door-latch-unlocked-light.png" alt="Door Latch Card — unlocked state, Edera Light" width="300" />
+  <img src="assets/door-latch-unlocked-dark.png" alt="Door Latch Card — unlocked state, Edera Dark" width="300" />
+</p>
+
+<p align="center">
   <img src="assets/door-latch-popup-light.png" alt="Door Latch Card — details popup, Edera Light" width="300" />
   <img src="assets/door-latch-popup-dark.png" alt="Door Latch Card — details popup, Edera Dark" width="300" />
 </p>
 
-*Door Latch Card in Edera Light and Dark modes, with its details popup. The previews use demonstration values and do not display private installation data.*
+*Door Latch Card in Edera Light and Dark modes, locked and unlocked, with its details popup. The previews use demonstration values and do not display private installation data.*
 
 ## Features
 
