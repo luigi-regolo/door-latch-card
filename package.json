@@ -1,0 +1,12 @@
+{
+  "name": "door-latch-card",
+  "version": "1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check src/door-latch-card.js && node --check dist/door-latch-card.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
