@@ -1,6 +1,7 @@
 # Door Latch Card
 
-[![HACS Repository](https://img.shields.io/badge/HACS-Repository-41BDF5?style=flat-square)](https://my.home-assistant.io/redirect/hacs_repository/?owner=luigi-regolo&repository=door-latch-card&category=plugin)
+[![Marketplace](https://img.shields.io/badge/Marketplace-41BDF5?style=flat-square)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=luigi-regolo&repository=door-latch-card&category=plugin)
+[![Release](https://img.shields.io/github/v/release/luigi-regolo/door-latch-card?label=Release&style=flat-square)](https://github.com/luigi-regolo/door-latch-card/releases/latest)
 [![License: GPL-3.0-only](https://img.shields.io/badge/license-GPL--3.0--only-blue?style=flat-square)](LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/luigi-regolo/door-latch-card?style=flat-square)](https://github.com/luigi-regolo/door-latch-card/stargazers)
 
@@ -51,18 +52,19 @@ Unavailable or unknown entities are always reported as not available and never a
 
 ## Installation
 
-### Marketplace — Add from link
+### Marketplace (Recommended)
 
-Door Latch Card is installed from its GitHub address, using the Marketplace of Home Assistant 2026.11 or newer.
+Install Door Latch Card directly from the default Marketplace catalog in Home Assistant 2026.11 or newer.
+
+[![Open Door Latch Card in the Marketplace](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=luigi-regolo&repository=door-latch-card&category=plugin)
 
 1. Go to **Settings** > **Marketplace**.
-2. Select **Add from link** and paste `https://github.com/luigi-regolo/door-latch-card`.
-3. If the type is not detected automatically, choose the dashboard card type, then select **Add**.
-4. Open **Door Latch Card** and select **Install**.
-5. Reload your browser to load the new resource.
-6. Add **Door Latch Card** to your dashboard and configure it using the visual editor.
-
-Marketplace may ask you to connect a GitHub account when you add a project from a link.
+2. The first time, accept the notice about community content.
+3. Use **Search** to find **Door Latch Card**.
+4. Open the repository page and select **Install**.
+5. Check the version in the dialog and select **Install** again to confirm.
+6. Reload your browser to load the new resource.
+7. Add **Door Latch Card** to your dashboard and configure it using the visual editor.
 
 ### Manual installation
 
