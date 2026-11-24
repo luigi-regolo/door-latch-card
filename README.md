@@ -9,7 +9,7 @@
 
 **Door Latch Card** is a custom Home Assistant card to unlock and lock a door with a `lock` entity, designed with a minimalist, responsive interface inspired by the Edera Light and Dark visual styles.
 
-A large animated dial shows the state of the lock at a glance: green when locked, amber when unlocked, red when jammed and grey when unavailable. Below it you slide to unlock, and a button locks the door again. Three tiles summarise the door contact, the battery and the number of lock events today. The details popup lists the lock, the door, the device and the latest events.
+A large animated dial shows the state of the lock at a glance: green when locked, amber when unlocked, red when jammed and grey when unavailable. Below it you slide to unlock, and a button locks the door again. If the lock can also release its latch, the slider performs a full unlock and a tile unlocks the deadbolt only. Three tiles summarise the door contact, the battery and either the deadbolt-only unlock or the number of lock events today. The details popup lists the lock, the door, the device and the latest events.
 
 The card works with any lock integration that provides a `lock` entity, and it does not require a dedicated account, paid API, or subscription.
 
@@ -36,12 +36,14 @@ The card works with any lock integration that provides a `lock` entity, and it d
 
 - **Animated state dial:** A halo and a ring of ticks that follow the state: locked, unlocked, locking, unlocking, jammed or unavailable. The shackle of the padlock opens and closes with the state.
 - **Slide to unlock:** Slide the handle to the right to unlock. While the lock is moving the card shows that it is waiting for the confirmation of the lock.
-- **Lock button:** When the door is unlocked, an amber **Lock door** button locks it again, as a reminder that the door is still open to the key.
+- **Full unlock:** If the lock entity supports opening the latch (the `open` feature of Home Assistant), the slider is labelled **Full unlock**: it unlocks the deadbolt and releases the latch, so the door can be opened. The standard `lock.open` service is used.
+- **Deadbolt only:** On those locks, the third tile, **Deadbolt**, unlocks the deadbolt only and leaves the latch closed, so the door stays latched. It works only while the lock is locked and replaces the events tile.
+- **Lock button:** When the door is unlocked, an amber **Lock door** button locks it again, as a reminder that the door is still open to the key. If the door sensor reports the door open, the button is disabled and asks you to close the door first.
 - **Confirmation of the command:** A ring and a badge confirm a command that succeeded, or report one that failed. A command that does not complete is reported instead of staying pending.
-- **Optional code keypad:** If your lock asks for a code, unlocking opens a numeric keypad. The code is typed every time, sent to Home Assistant and never stored in the card or in its settings. Locking never asks for a code.
+- **Optional code keypad:** If your lock asks for a code, unlocking (full or deadbolt only) opens a numeric keypad. The code is typed every time, sent to Home Assistant and never stored in the card or in its settings. Locking never asks for a code.
 - **Door sensor (optional):** Closed or open, read from a `binary_sensor`. If the door is open while the lock is locked, the card warns you.
 - **Battery:** Level with an icon and a colour that depend on the charge, with thresholds you can change.
-- **Events today:** The number of lockings and unlockings of today, read from the history of the lock.
+- **Events today:** The number of lockings and unlockings of today, read from the history of the lock. It is the third tile on locks that cannot release their latch.
 - **Lock state sensor (optional):** Show the state from a separate `sensor`, while the commands stay on the lock entity.
 - **Details popup:** Opened from the round button next to the title. Fixed-height popup, centred on the screen; on tablets and desktop it uses a wide layout with columns.
 - **Languages:** Italian, English, German and French. The language follows the Home Assistant user, or you can choose one in the editor. In Automatic mode, lock states and a few common words are taken from the translations of Home Assistant when available, in any language that Home Assistant supports; every other text is shown in English when the language is not one of the four.
@@ -83,7 +85,7 @@ If the `www` directory was newly created, Home Assistant may require a restart b
 Open a dashboard in edit mode, add **Door Latch Card**, and configure the available sections:
 
 - **Lock:** The lock entity, an optional sensor for the lock state, whether the commands are enabled and whether unlocking asks for a code.
-- **Modules:** The door sensor, the battery and the events of today. For each module, whether it is active, its entity (where it needs one) and its position. For the battery you can set the low and critical thresholds.
+- **Modules:** The door sensor, the battery and the events of today (on locks that can release their latch, the third tile is the deadbolt tile instead). For each module, whether it is active, its entity (where it needs one) and its position. For the battery you can set the low and critical thresholds.
 - **Appearance:** Header, title, theme, language and a switch for the full available width on tablets and desktop (on by default; switch it off for a narrow, centred card).
 
 The editor uses native Home Assistant entity selectors, filtered by domain and device class.
@@ -108,7 +110,7 @@ Door Latch Card requires:
 
 Supported entity types: `lock`, `sensor` (lock state, battery) and `binary_sensor` (door, window, opening).
 
-The card uses the standard Home Assistant services `lock.lock` and `lock.unlock`.
+The card uses the standard Home Assistant services `lock.lock` and `lock.unlock`, and `lock.open` when the lock supports it. For example, the SwitchBot integration offers `lock.open` only when its Nightlatch operation mode is enabled.
 
 No specific minimum Home Assistant version has been independently verified for this repository.
 
@@ -118,7 +120,7 @@ The card does not require a dedicated paid service or additional remote JavaScri
 
 Door Latch Card operates through Home Assistant entities and the permissions of the authenticated user.
 
-- Commands are sent only when you slide, tap a button or confirm on the keypad.
+- Commands are sent only when you slide, tap a button or a tile, or confirm on the keypad.
 - A lock code is never stored in the card, in its settings or in the browser.
 - The card does not include advertising, analytics, telemetry, or user-tracking services.
 
