@@ -8,7 +8,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '1.0';
+  const VERSION = '1.1';
   const TAG = 'door-latch-card';
   const EDITOR_TAG = 'door-latch-card-editor';
 
@@ -58,6 +58,13 @@
   "readOnly": "Sola lettura · comandi disattivati",
   "busy": "In corso…",
   "lockBtn": "Blocca porta",
+  "lockDoorOpen": "Chiudi la porta per bloccare",
+  "slideOpen": "Sblocco completo",
+  "slideOpenAria": "Apri la porta con lo sblocco completo. Premi Invio o scorri a destra",
+  "boltTile": "Catenaccio",
+  "boltSub": "Solo sblocco",
+  "boltAria": "Sblocca solo il catenaccio: lo scrocco resta chiuso",
+  "openBtn": "Apri porta",
   "slide": "Scorri per sbloccare",
   "slideAria": "Sblocca la porta. Premi Invio o scorri a destra",
   "detailsAria": "Dettagli e stato",
@@ -123,6 +130,13 @@
   "readOnly": "Read-only · commands disabled",
   "busy": "In progress…",
   "lockBtn": "Lock door",
+  "lockDoorOpen": "Close the door to lock",
+  "slideOpen": "Full unlock",
+  "slideOpenAria": "Open the door with a full unlock. Press Enter or slide right",
+  "boltTile": "Deadbolt",
+  "boltSub": "Unlock only",
+  "boltAria": "Unlock the deadbolt only: the latch stays closed",
+  "openBtn": "Open door",
   "slide": "Slide to unlock",
   "slideAria": "Unlock the door. Press Enter or slide right",
   "detailsAria": "Details and status",
@@ -188,6 +202,13 @@
   "readOnly": "Nur lesen · Befehle deaktiviert",
   "busy": "Läuft…",
   "lockBtn": "Tür verriegeln",
+  "lockDoorOpen": "Tür schließen zum Verriegeln",
+  "slideOpen": "Vollständig entriegeln",
+  "slideOpenAria": "Tür vollständig entriegeln und öffnen. Eingabetaste drücken oder nach rechts wischen",
+  "boltTile": "Riegel",
+  "boltSub": "Nur entriegeln",
+  "boltAria": "Nur den Riegel entriegeln: die Falle bleibt zu",
+  "openBtn": "Tür öffnen",
   "slide": "Zum Entriegeln wischen",
   "slideAria": "Tür entriegeln. Eingabetaste drücken oder nach rechts wischen",
   "detailsAria": "Details und Status",
@@ -253,6 +274,13 @@
   "readOnly": "Lecture seule · commandes désactivées",
   "busy": "En cours…",
   "lockBtn": "Verrouiller la porte",
+  "lockDoorOpen": "Fermez la porte pour verrouiller",
+  "slideOpen": "Déverrouillage complet",
+  "slideOpenAria": "Ouvrir la porte avec un déverrouillage complet. Appuyez sur Entrée ou glissez vers la droite",
+  "boltTile": "Pêne dormant",
+  "boltSub": "Déverrouiller seul",
+  "boltAria": "Déverrouiller le pêne dormant seul : le demi-tour reste fermé",
+  "openBtn": "Ouvrir la porte",
   "slide": "Glissez pour déverrouiller",
   "slideAria": "Déverrouiller la porte. Appuyez sur Entrée ou glissez vers la droite",
   "detailsAria": "Détails et état",
@@ -622,6 +650,12 @@ button{font:inherit}
 .bt{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;margin-top:14px;border-radius:26px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;
   border:1px solid var(--wr);background:var(--wrb);color:var(--wrx);-webkit-tap-highlight-color:transparent}
 .bt svg.i{color:var(--wrx)}
+.bt:disabled{opacity:.55;cursor:not-allowed}
+.bt:focus-visible,.t.act:focus-visible{outline:2px solid var(--wrx);outline-offset:2px}
+.t.act{font:inherit;color:inherit;width:100%;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s,border-color .2s}
+.t.act:hover:not(:disabled){border-color:var(--t2)}
+.t.act:active:not(:disabled){transform:scale(.97)}
+.t.act:disabled{opacity:.5;cursor:not-allowed}
 .tl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
 .t{background:var(--s2);border:1px solid var(--ln);border-radius:18px;padding:11px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
 .t .ic{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--cir);color:var(--cx)}
@@ -852,7 +886,7 @@ button,input,select{font:inherit;color:inherit}
         if (CMD_STATES[v]) { m.state = v; m.since = Date.parse(ss.last_changed); m.shown = null; }
       }
       if (this._pend && !(m.state === this._pend.target)) {
-        if (m.state !== 'jammed' && m.state !== 'unavailable') { m.state = this._pend.act === 'unlock' ? 'unlocking' : 'locking'; m.shown = null; }
+        if (m.state !== 'jammed' && m.state !== 'unavailable') { m.state = this._pend.act === 'lock' ? 'locking' : 'unlocking'; m.shown = null; }
       }
       const d = c.mods.door.on ? stOf(h, c.mods.door.entity) : null;
       if (c.mods.door.on && c.mods.door.entity) {
@@ -861,6 +895,7 @@ button,input,select{font:inherit;color:inherit}
       }
       const b = c.mods.battery.on && c.mods.battery.entity ? stOf(h, c.mods.battery.entity) : null;
       if (b) { const n = parseFloat(b.state); m.bat = isFinite(n) ? Math.max(0, Math.min(100, Math.round(n))) : null; }
+      m.canOpen = !!(real && real.attributes && (Number(real.attributes.supported_features) & 1));
       m.codeFmt = !!(real && real.attributes && real.attributes.code_format);
       m.needCode = c.require_code && m.codeFmt;
       return m;
@@ -938,7 +973,7 @@ button,input,select{font:inherit;color:inherit}
     _canCommand(m) { return this._cfg.commands && m.has && !!m.real && m.state !== 'unavailable' && m.state !== 'jammed'; }
     _run(act, code) {
       const c = this._cfg, h = this._hass;
-      const target = act === 'unlock' ? 'unlocked' : 'locked';
+      const target = act === 'lock' ? 'locked' : 'unlocked';
       this._pend = { act: act, target: target, until: Date.now() + PEND_MS };
       this._msg = ''; this._flash = null; this._sig = null; this._render();
       window.clearTimeout(this._timers.pend);
@@ -952,7 +987,8 @@ button,input,select{font:inherit;color:inherit}
     _request(act) {
       const m = this._model();
       if (!this._canCommand(m)) return;
-      if (act === 'unlock' && m.needCode) { this._openCode(); return; }
+      if (act === 'lock' && m.door === 'open') return;
+      if ((act === 'unlock' || act === 'open') && m.needCode) { this._codeAct = act; this._openCode(); return; }
       this._run(act).catch(() => this._fail());
     }
     _fail() {
@@ -983,8 +1019,11 @@ button,input,select{font:inherit;color:inherit}
       if (m.state === 'jammed') return '<div class="sl dis"><div class="lb">' + t('manual') + '</div></div>';
       if (!this._cfg.commands) return '<div class="sl dis"><div class="lb">' + ico('shield') + ' ' + t('readOnly') + '</div></div>';
       if (m.state === 'unlocking' || m.state === 'locking') return '<div class="sl dis"><div class="lb">' + t('busy') + '</div></div>';
-      if (m.state === 'unlocked') return '<button class="bt" data-act="lock">' + ico('lock') + t('lockBtn') + '</button>';
-      return '<div class="sl" data-act="slide"><div class="fl"></div><div class="lb">' + t('slide') + ' ' + ico('arr') + '</div><button class="hdl" aria-label="' + esc(t('slideAria')) + '">' + ico('lock') + '</button></div>';
+      const shut = m.door === 'open';
+      if (m.state === 'unlocked') return '<button class="bt" data-act="lock"' + (shut ? ' disabled' : '') + '>' + ico('lock') + t(shut ? 'lockDoorOpen' : 'lockBtn') + '</button>';
+      // A lock that can "open" (release the latch too): the slider does the full unlock, the third tile unlocks the deadbolt only.
+      const cmd = m.canOpen ? 'open' : 'unlock';
+      return '<div class="sl" data-act="slide" data-cmd="' + cmd + '"><div class="fl"></div><div class="lb">' + t(m.canOpen ? 'slideOpen' : 'slide') + ' ' + ico('arr') + '</div><button class="hdl" aria-label="' + esc(t(m.canOpen ? 'slideOpenAria' : 'slideAria')) + '">' + ico(m.canOpen ? 'dooro' : 'lock') + '</button></div>';
     }
     _tiles(m) {
       const c = this._cfg, t = (k) => this._t(k), out = [];
@@ -995,6 +1034,9 @@ button,input,select{font:inherit;color:inherit}
         } else if (k === 'battery' && c.mods.battery.on && c.mods.battery.entity) {
           const b = this._batInfo(m);
           out.push('<div class="t c-' + b.c + '"><div class="ic">' + ico(b.i) + '</div><b>' + b.v + '</b><span>' + t('tBat') + '</span></div>');
+        } else if (k === 'events' && m.canOpen && c.commands) {
+          const go = this._canCommand(m) && m.state === 'locked';
+          out.push('<button type="button" class="t act c-nt" data-act="bolt"' + (go ? '' : ' disabled') + ' aria-label="' + esc(t('boltAria')) + '"><div class="ic">' + ico('lockopen') + '</div><b>' + t('boltTile') + '</b><span>' + t('boltSub') + '</span></button>');
         } else if (k === 'events' && c.mods.events.on) {
           const n = m.state === 'unavailable' || this._ev == null ? '—' : String(this._ev);
           out.push('<div class="t c-nt" aria-label="' + esc(this._t('evAria', { n: n })) + '"><div class="ic">' + ico('clock') + '</div><b>' + n + '</b><span>' + t('tEvents') + '</span></div>');
@@ -1049,15 +1091,16 @@ button,input,select{font:inherit;color:inherit}
       const end = () => {
         if (!drag) return;
         drag = false; h.style.transition = 'transform .25s'; f.style.transition = 'width .25s';
-        if (x >= max * 0.9) { set(max); this._request('unlock'); window.setTimeout(() => { if (this._keypad) reset(); }, 0); } else set(0);
+        if (x >= max * 0.9) { set(max); this._request(sl.dataset.cmd || 'unlock'); window.setTimeout(() => { if (this._keypad) reset(); }, 0); } else set(0);
       };
       h.addEventListener('pointerup', end); h.addEventListener('pointercancel', end);
-      h.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this._request('unlock'); } });
+      h.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this._request(sl.dataset.cmd || 'unlock'); } });
       this._resetSlider = reset;
     }
     _click(e) {
       const a = e.target.closest('[data-act]');
       if (a && a.dataset.act === 'lock') { this._request('lock'); return; }
+      if (a && a.dataset.act === 'bolt') { this._request('unlock'); return; }
       if (a && a.dataset.act === 'pop') { this._openPop(); return; }
       if (e.target === this._ov || e.target.closest('#xb')) { this._closePop(); return; }
       if (e.target === this._sh || e.target.closest('#shNo')) { this._closeCode(true); return; }
@@ -1123,7 +1166,7 @@ button,input,select{font:inherit;color:inherit}
         '<div class="ast"><div><span>' + t('now') + '</span><b>' + esc(m.state === 'locked' ? (this._stateText('locked', m.shown) || t('lockedS')) : v.h) + '</b></div><div><span>' + t('after') + '</span><b>' + esc(this._stateText('unlocked', null) || t('unlocked')) + '</b></div></div>' +
         '<div class="klbl">' + t('codeReq') + '</div><div class="dotrow"><div class="dts' + (this._shake ? ' shake' : '') + '">' + Array.from({ length: n }, (_, i) => '<i class="' + (i < this._code.length ? 'f' : '') + '"></i>').join('') + '</div></div>' +
         '<div class="err" role="alert">' + (this._err ? esc(t(this._err)) : '') + '</div>' + keys +
-        '<button type="button" class="acta" id="shGo" ' + (this._code && !this._kbusy ? '' : 'disabled') + '>' + esc(t('unlockBtn')) + '</button>' +
+        '<button type="button" class="acta" id="shGo" ' + (this._code && !this._kbusy ? '' : 'disabled') + '>' + esc(t(this._codeAct === 'open' ? 'openBtn' : 'unlockBtn')) + '</button>' +
         '<div class="knote">' + t('note') + '</div></div></div>';
     }
     _press(k) {
@@ -1134,12 +1177,13 @@ button,input,select{font:inherit;color:inherit}
     _submit() {
       if (!this._code || this._kbusy) return;
       const code = this._code; this._kbusy = true; this._drawCode();
-      this._run('unlock', code).then(() => { this._closeCode(false); }, () => {
+      this._run(this._codeAct || 'unlock', code).then(() => { this._closeCode(false); }, () => {
         this._kbusy = false; this._err = 'wrongCode'; this._code = ''; this._shake = true; this._drawCode(); this._shake = false;
       });
       this._code = '';
     }
     _closeCode(cancelled) {
+      this._codeAct = '';
       this._keypad = false; this._code = ''; this._err = ''; this._kbusy = false;
       this._sh.className = 'sh'; this._sh.innerHTML = '';
       if (cancelled && this._resetSlider) this._resetSlider();
